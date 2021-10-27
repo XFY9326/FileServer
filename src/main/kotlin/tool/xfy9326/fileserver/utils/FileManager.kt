@@ -42,7 +42,7 @@ class FileManager constructor(config: IConfig) {
         } else if (targetFile.isFile) {
             error("Current path is a file, not directory! Path: $path")
         } else {
-            throw NoSuchFileException(targetFile, reason = "File not exists! Path: $path")
+            throw NoSuchFileException(File(path), reason = "File not exists!")
         }
     }
 
@@ -54,7 +54,7 @@ class FileManager constructor(config: IConfig) {
             error("Not allowed to download invisible file! File: ${targetFile.name}")
         }
         if (!targetFile.isFile || !targetFile.canRead()) {
-            throw FileSystemException(targetFile, reason = "File is s directory or not readable! Path: $path")
+            throw FileSystemException(File(path), reason = "File is s directory or not readable!")
         }
         targetFile.readChannel(coroutineContext = coroutineContext).copyAndClose(output)
     }
@@ -66,16 +66,16 @@ class FileManager constructor(config: IConfig) {
         }
         if (targetFile.exists()) {
             if (targetFile.isFile) {
-                throw FileAlreadyExistsException(targetFile, reason = "File already exists! Path: $path")
+                throw FileAlreadyExistsException(File(path), reason = "File already exists!")
             } else {
-                throw FileAlreadyExistsException(targetFile, reason = "Same name directory already exists! Path: $path")
+                throw FileAlreadyExistsException(File(path), reason = "Same name directory already exists!")
             }
         }
         targetFile.parentFile.let {
             if (it == null || !it.exists() && !it.mkdirs()) {
-                throw FileSystemException(it, reason = "Parent directory create failed! Path: $path")
+                throw FileSystemException(File(path).parentFile, reason = "Parent directory create failed!")
             } else if (it.isFile) {
-                throw FileAlreadyExistsException(it, reason = "Parent directory is a file! Path: $path")
+                throw FileAlreadyExistsException(File(path).parentFile, reason = "Parent directory is a file!")
             }
         }
         targetFile.writeChannel(coroutineContext).use {
