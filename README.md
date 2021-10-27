@@ -1,4 +1,4 @@
-#FileServer
+# FileServer
 Simple Http file server based on Ktor and supported basic Http auth.  
 Might be useful if you want to share or upload simple files in terminal.  
 Just for fun.
