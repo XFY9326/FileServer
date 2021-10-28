@@ -113,6 +113,7 @@ Default config:
     "port": 8080,
     "root": "files",
     "allowAnonymous": true,
+    "allowAnonymousDownload": true,
     "users": {
     }
 }
@@ -123,6 +124,7 @@ Default config:
 | port | Server port |
 | root | File server root path |
 | allowAnonymous | Close basic http auth |
+| allowAnonymousDownload | Download without basic http auth<br/>No effect if allowAnonymous=true<br/>http://HOST/f/PATH/FILE |
 | users | UserName:String to Password:String dict<br/>Useless if allowAnonymous=true |
 
 **Attention: Blank or empty UserNames and Passwords are not allowed to use!**

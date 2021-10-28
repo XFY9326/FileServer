@@ -5,17 +5,14 @@ import io.ktor.auth.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import tool.xfy9326.fileserver.beans.IConfig
 import tool.xfy9326.fileserver.server.DEFAULT_BASIC_AUTH
 import tool.xfy9326.fileserver.utils.FileManager.Companion.joinToPath
 
-fun Routing.withAuth(config: IConfig, block: Route.() -> Unit) {
-    if (config.allowAnonymous) {
-        block()
+fun Routing.withAuth(enableAuth: Boolean, block: Route.() -> Unit) {
+    if (enableAuth) {
+        authenticate(DEFAULT_BASIC_AUTH, build = block)
     } else {
-        authenticate(DEFAULT_BASIC_AUTH) {
-            block()
-        }
+        block()
     }
 }
 

@@ -2,9 +2,10 @@ package tool.xfy9326.fileserver.utils
 
 import io.ktor.http.*
 import kotlinx.html.*
+import tool.xfy9326.fileserver.beans.IConfig
 
 @Suppress("JSUnusedLocalSymbols")
-fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: String? = null) {
+fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: String? = null, allowAnonymousUpload: Boolean) {
     head {
         title {
             +"Path: $currentPath"
@@ -24,9 +25,10 @@ fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: S
                     """.trimIndent()
                 }
             }
-            unsafe {
-                //language=JavaScript
-                +"""
+            if (allowAnonymousUpload || userName != null) {
+                unsafe {
+                    //language=JavaScript
+                    +"""
                         function selectFiles() {
                             document.getElementById("files").click();
                         }
@@ -55,6 +57,7 @@ fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: S
                             }
                         });
                     """.trimIndent()
+                }
             }
         }
     }
@@ -73,9 +76,11 @@ fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: S
         }
         h3 {
             +"Files: ${Typography.nbsp}${Typography.nbsp}${Typography.nbsp}${Typography.nbsp}"
-            button {
-                onClick = "selectFiles()"
-                +"Upload"
+            if (allowAnonymousUpload || userName != null) {
+                button {
+                    onClick = "selectFiles()"
+                    +"Upload"
+                }
             }
         }
         ul {

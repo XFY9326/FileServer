@@ -18,13 +18,15 @@ fun Application.configureRouting(config: IConfig) {
         get("/") {
             call.respondText("Server OK!\r\n")
         }
-        get("/logout"){
+        get("/logout") {
             call.respond(HttpStatusCode.Unauthorized)
         }
-        withAuth(config) {
+        withAuth(!config.allowAnonymous) {
             routeListFile(fileManager)
-            routeViewFile(fileManager)
+            routeViewFile(config, fileManager)
             routeUploadFile(fileManager)
+        }
+        withAuth(!config.allowAnonymous && (config.allowAnonymous || !config.allowAnonymousDownload)) {
             routeDownloadFile(fileManager)
         }
     }

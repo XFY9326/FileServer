@@ -5,5 +5,6 @@ interface IConfig {
     val port: Int
     val root: String
     val allowAnonymous: Boolean
+    val allowAnonymousDownload: Boolean
     val users: Map<String, String>
 }

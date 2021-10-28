@@ -27,6 +27,7 @@ private class Launch : CliktCommand(help = "Launch file server"), IConfig {
     override val port: Int by option(help = "Listening port").int().default(BasicConfig.DEFAULT_PORT)
     override val root: String by option(help = "File server root").default(BasicConfig.DEFAULT_ROOT)
     override val allowAnonymous: Boolean = BasicConfig.DEFAULT_ALLOW_ANONYMOUS
+    override val allowAnonymousDownload: Boolean = BasicConfig.DEFAULT_ALLOW_ANONYMOUS_DOWNLOAD
     override val users: Map<String, String> = BasicConfig.DEFAULT_USERS
     private val config: File? by option(help = "Config json (Overwrite all params)").file(mustExist = true, canBeDir = false, mustBeReadable = true)
 
