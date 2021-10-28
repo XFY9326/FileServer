@@ -55,6 +55,9 @@ curl -u <USER>:<PASSWORD> --upload-file <FILE> http://localhost:8080/f/<PATH>/<F
 # Download file
 wget http://localhost:8080/f/<PATH>/<FILE>
 
+# Download multiple files
+wget --no-parent -r --reject "index.html*" http://localhost:8080/f/<PATH>/
+
 # Basic Http auth
 wget --user <USER> --password <PASSWORD> http://localhost:8080/f/<PATH>/<FILE>
 ```
