@@ -9,7 +9,7 @@ Just for fun.
 # Output: build/distributions
 ./gradlew assembleJar
 
-# Build with execuable script
+# Execuable script bundle
 # Output: build/distributions
 ./gradlew assemble
 ```
@@ -29,6 +29,10 @@ Commands:
 ```
 # For more details, see help
 java -jar FileServer-<VERSION>.jar -h
+
+java -jar FileServer-<VERSION>.jar launch -h
+
+java -jar FileServer-<VERSION>.jar default-config -h
 ```
 
 ## Check server
@@ -56,17 +60,17 @@ wget --user <USER> --password <PASSWORD> http://localhost:8080/f/<PATH>/<FILE>
 ```
 
 ## View file
-In terminal:  
 ```
-# Only return file names under <PATH> in text
+# Show file names under <PATH> in text
 curl http://localhost:8080/l/<PATH>
 
-# Show file url in text
+# Show file url under <PATH> in text
 curl http://localhost:8080/l/<PATH>?url=1
 ```
 
-In browser:  
-Open http://localhost:8080/l/ in browser
+## Browser
+Open http://localhost:8080/f/ in browser.  
+Support list files, upload files and download file.  
 
 ## Config
 ```
@@ -89,7 +93,7 @@ Default config:
 | host | Server host |
 | port | Server port |
 | root | File server root path |
-| allowAnonymous | Don't need basic http auth |
+| allowAnonymous | Close basic http auth |
 | users | UserName:String to Password:String dict<br/>Useless if allowAnonymous=true |
 
 **Attention: Blank or empty UserNames and Passwords are not allowed to use!**
