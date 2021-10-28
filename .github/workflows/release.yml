@@ -1,0 +1,59 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Release
+
+# Controls when the workflow will run
+on:
+  create:
+    tags:
+      - v*
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get tag name
+        id: git_tag
+        uses: WyriHaximus/github-action-get-previous-tag@v1
+        
+      - name: Checkout tag
+        run: git checkout ${{ steps.git_tag.outputs.tag }}
+
+      - name: Cache Gradle
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-gradle
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ steps.git_tag.outputs.tag }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - name: Gradle
+        run: |
+          ./gradlew assemble
+          ./gradlew assembleJar
+
+      - name: Upload release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.git_tag.outputs.tag }}
+          body: ${{ steps.git_tag.outputs.tag }}
+          files: build/distributions/*
+
+      - name: Delete workflow runs
+        uses: GitRML/delete-workflow-runs@main
+        with:
+          retain_days: 7
+          keep_minimum_runs: 2
