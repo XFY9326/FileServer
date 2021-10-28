@@ -3,26 +3,63 @@ package tool.xfy9326.fileserver.utils
 import io.ktor.http.*
 import kotlinx.html.*
 
+@Suppress("JSUnusedLocalSymbols")
 fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: String? = null) {
     head {
         title {
             +"Path: $currentPath"
         }
-        if (userName != null) {
-            script {
+        script {
+            if (userName != null) {
                 unsafe {
+                    //language=JavaScript
                     +"""
                         function logout() {
-                            let request = new XMLHttpRequest();
-                            request.open("GET", window.location.host, true);
-                            request.setRequestHeader("Authorization", null);
-                            request.onload = function () {
-                            window.location = location.protocol + "//" + window.location.host;
-                            };
-                            request.send();
+                            fetch("/logout").then(function() {
+                                window.location.reload()
+                            });
                         }
+                        
+                        
                     """.trimIndent()
                 }
+            }
+            unsafe {
+                //language=JavaScript
+                +"""
+                        function selectFiles() {
+                            document.getElementById("files").click();
+                        }
+                        
+                        function upload(file) {
+                            return fetch(window.location.href + file.name, {
+                                method: "PUT"
+                            }).then(response => {
+                                if (response.ok) {
+                                    return "Upload \'" + file.name + "\' success!";
+                                } else {
+                                    return response.text().then(msg => "Upload \'" + file.name + "\' failed! " + msg);
+                                }
+                            }).catch(error => {
+                                console.error(error);
+                                return "Upload \'" + file.name + "\' error!";
+                            });
+                        }
+                        
+                        document.addEventListener("DOMContentLoaded", function() {
+                            document.getElementById("files").onchange = function(event) {
+                                let files = event.target.files;
+                                let results = [];
+                                for (let i = 0; i < files.length; i++){
+                                    results.push(upload(files[i]));
+                                }
+                                Promise.all(results).then(msgArray => {
+                                    alert(msgArray.join("\r\n"));
+                                    window.location.reload();
+                                });
+                            }
+                        });
+                    """.trimIndent()
             }
         }
     }
@@ -40,7 +77,11 @@ fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: S
             }
         }
         h3 {
-            +"Files:"
+            +"Files: ${Typography.nbsp}${Typography.nbsp}${Typography.nbsp}${Typography.nbsp}"
+            button {
+                onClick = "selectFiles()"
+                +"Upload"
+            }
         }
         ul {
             if (currentPath != "/") {
@@ -62,6 +103,12 @@ fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: S
         }
         p {
             +"Total: ${files.size} files"
+        }
+        input {
+            id = "files"
+            type = InputType.file
+            multiple = true
+            style = "display: none;"
         }
     }
 }

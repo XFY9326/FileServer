@@ -1,6 +1,7 @@
 package tool.xfy9326.fileserver.server.route
 
 import io.ktor.application.*
+import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import tool.xfy9326.fileserver.beans.IConfig
@@ -16,6 +17,9 @@ fun Application.configureRouting(config: IConfig) {
     routing {
         get("/") {
             call.respondText("Server OK!\r\n")
+        }
+        get("/logout"){
+            call.respond(HttpStatusCode.Unauthorized)
         }
         withAuth(config) {
             routeListFile(fileManager)

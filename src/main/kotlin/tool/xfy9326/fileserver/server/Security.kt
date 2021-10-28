@@ -10,7 +10,7 @@ fun Application.configureSecurity(config: IConfig) {
     install(Authentication) {
         basic(DEFAULT_BASIC_AUTH) {
             validate {
-                if (it.name in config.users && config.users[it.name] == it.password) {
+                if (it.name.isNotBlank() && it.password.isNotBlank() && it.name in config.users && config.users[it.name] == it.password) {
                     UserIdPrincipal(it.name)
                 } else {
                     null

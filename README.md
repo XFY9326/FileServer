@@ -91,3 +91,5 @@ Default config:
 | root | File server root path |
 | allowAnonymous | Don't need basic http auth |
 | users | UserName:String to Password:String dict<br/>Useless if allowAnonymous=true |
+
+**Attention: Blank or empty UserNames and Passwords are not allowed to use!**
