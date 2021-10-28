@@ -25,6 +25,7 @@ fun Application.configureRouting(config: IConfig) {
             routeListFile(fileManager)
             routeViewFile(fileManager)
             routeUploadFile(fileManager)
+            routeDownloadFile(fileManager)
         }
     }
 }

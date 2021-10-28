@@ -31,30 +31,25 @@ fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: S
                             document.getElementById("files").click();
                         }
                         
-                        function upload(file) {
-                            return fetch(window.location.href + file.name, {
-                                method: "PUT"
-                            }).then(response => {
-                                if (response.ok) {
-                                    return "Upload \'" + file.name + "\' success!";
-                                } else {
-                                    return response.text().then(msg => "Upload \'" + file.name + "\' failed! " + msg);
-                                }
-                            }).catch(error => {
+                        function upload(files) {
+                            let formData = new FormData();
+                            for(let i = 0; i < files.length; i++){
+                                formData.append(files[i].name, files[i]);
+                            }
+                            return fetch(window.location.href, {
+                                method: "POST",
+                                body: formData
+                            }).then(response => response.text()).catch(error => {
                                 console.error(error);
-                                return "Upload \'" + file.name + "\' error!";
+                                return "Upload error!";
                             });
                         }
                         
                         document.addEventListener("DOMContentLoaded", function() {
                             document.getElementById("files").onchange = function(event) {
                                 let files = event.target.files;
-                                let results = [];
-                                for (let i = 0; i < files.length; i++){
-                                    results.push(upload(files[i]));
-                                }
-                                Promise.all(results).then(msgArray => {
-                                    alert(msgArray.join("\r\n"));
+                                upload(files).then(msg => {
+                                    alert(msg);
                                     window.location.reload();
                                 });
                             }

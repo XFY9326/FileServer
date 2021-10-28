@@ -19,7 +19,7 @@ fun Routing.withAuth(config: IConfig, block: Route.() -> Unit) {
     }
 }
 
-fun ApplicationCall.getParamsPath() = parameters.getAll(PARAMS_PATH_FILE).joinToPath()
+fun ApplicationCall.getParamsPath() = parameters.getAll(PARAMS_PATH_FILE)?.filter { it.isBlank() }.joinToPath()
 
 suspend fun ApplicationCall.respondException(statusCode: HttpStatusCode, exception: Exception) {
     respond(statusCode, exception.message.toString() + "\r\n")

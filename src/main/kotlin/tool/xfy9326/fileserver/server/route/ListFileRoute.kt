@@ -9,6 +9,9 @@ import io.ktor.util.pipeline.*
 import tool.xfy9326.fileserver.utils.FileManager
 
 const val PARAM_URL = "url"
+const val PARAM_U = "u"
+const val PARAM_FILE = "file"
+const val PARAM_F = "f"
 
 fun Route.routeListFile(fileManager: FileManager) {
     get("/$PATH_LIST/{$PARAMS_PATH_FILE...}/") {
@@ -21,17 +24,14 @@ fun Route.routeListFile(fileManager: FileManager) {
 
 private suspend fun PipelineContext<Unit, ApplicationCall>.listFiles(fileManager: FileManager) {
     try {
-        val showUrl = call.parameters[PARAM_URL]
-        val files = fileManager.listFiles(call.getParamsPath())
+        val showUrl = call.parameters[PARAM_URL] ?: call.parameters[PARAM_U]
+        val fileOnly = (call.parameters[PARAM_FILE] ?: call.parameters[PARAM_F]) != null
+        val files = fileManager.listFiles(call.getParamsPath(), fileOnly)
         val output = buildString {
             files.forEach {
                 if (showUrl != null) {
                     append(call.url {
-                        encodedPath += if (encodedPath.endsWith("/")) {
-                            "/$it"
-                        } else {
-                            it
-                        }.encodeURLPath()
+                        encodedPath = encodedPath.trimEnd('/') + "/" + it
                     }.substringBefore("?"))
                     if (it.endsWith("/")) {
                         append("?$PARAM_URL=$showUrl")
@@ -43,6 +43,8 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.listFiles(fileManager
             }
         }
         call.respondText(output + "\r\n")
+    } catch (e: AccessDeniedException) {
+        call.respondException(HttpStatusCode.Forbidden, e)
     } catch (e: NoSuchFileException) {
         call.respondException(HttpStatusCode.NotFound, e)
     } catch (e: IllegalStateException) {
