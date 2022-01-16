@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "tool.xfy9326"
-version = "0.0.3"
+version = "0.0.4"
 
 val MainClass = "tool.xfy9326.fileserver.ApplicationKt"
 val Author = "XFY9326"
