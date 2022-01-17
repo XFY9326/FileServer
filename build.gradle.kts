@@ -6,6 +6,7 @@ val clikt_version: String by project
 val kotlinx_coroutines_version: String by project
 val kotlinx_serialization_version: String by project
 val logback_version: String by project
+val jansi_version: String by project
 
 plugins {
     application
@@ -76,6 +77,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("org.fusesource.jansi:jansi:$jansi_version")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
 }

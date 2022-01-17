@@ -41,6 +41,8 @@ private class Launch : CliktCommand(help = "Launch file server"), IConfig {
 
     override fun run() {
         config.let {
+            @Suppress("HttpUrlsUsage")
+            println("Application is running at: http://$host:$port")
             if (it == null) {
                 launchServer(this)
             } else {
