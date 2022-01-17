@@ -9,7 +9,9 @@ data class BasicConfig(
     override val root: String = DEFAULT_ROOT,
     override val allowAnonymous: Boolean = DEFAULT_ALLOW_ANONYMOUS,
     override val allowAnonymousDownload: Boolean = DEFAULT_ALLOW_ANONYMOUS_DOWNLOAD,
-    override val users: Map<String, String> = DEFAULT_USERS
+    override val users: Map<String, String> = DEFAULT_USERS,
+    override val callLogging: Boolean = DEFAULT_CALL_LOGGING,
+    override val ignoreUploadDownloadIOException: Boolean = DEFAULT_IGNORE_UPLOAD_DOWNLOAD_IO_EXCEPTION
 ) : IConfig {
     companion object {
         const val DEFAULT_HOST = "0.0.0.0"
@@ -17,6 +19,8 @@ data class BasicConfig(
         const val DEFAULT_ROOT = "files"
         const val DEFAULT_ALLOW_ANONYMOUS = true
         const val DEFAULT_ALLOW_ANONYMOUS_DOWNLOAD = true
+        const val DEFAULT_CALL_LOGGING = true
+        const val DEFAULT_IGNORE_UPLOAD_DOWNLOAD_IO_EXCEPTION = true
         val DEFAULT_USERS = emptyMap<String, String>()
     }
 }

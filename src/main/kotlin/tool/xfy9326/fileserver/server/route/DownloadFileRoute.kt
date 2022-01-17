@@ -4,10 +4,12 @@ import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import tool.xfy9326.fileserver.beans.IConfig
 import tool.xfy9326.fileserver.utils.FileManager
 import tool.xfy9326.fileserver.utils.FileManager.Companion.joinToPath
+import java.io.IOException
 
-fun Route.routeDownloadFile(fileManager: FileManager) {
+fun Route.routeDownloadFile(config: IConfig, fileManager: FileManager) {
     get("/$PATH_FILE/{$PARAMS_PATH_FILE...}") {
         try {
             val paramsPath = call.parameters.getAll(PARAMS_PATH_FILE)
@@ -24,12 +26,16 @@ fun Route.routeDownloadFile(fileManager: FileManager) {
                 }
             }
         } catch (e: AccessDeniedException) {
-            call.respondException(HttpStatusCode.Forbidden, e)
+            e.printStackTrace()
         } catch (e: FileSystemException) {
-            call.respondException(HttpStatusCode.BadRequest, e)
+            e.printStackTrace()
+        } catch (e: IOException) {
+            if (!config.ignoreUploadDownloadIOException) e.printStackTrace()
         } catch (e: Exception) {
             e.printStackTrace()
-            call.respond(HttpStatusCode.InternalServerError)
+            if (call.response.status() == null) {
+                call.respondException(HttpStatusCode.InternalServerError, e)
+            }
         }
     }
 }

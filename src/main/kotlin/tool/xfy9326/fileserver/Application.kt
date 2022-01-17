@@ -29,6 +29,8 @@ private class Launch : CliktCommand(help = "Launch file server"), IConfig {
     override val allowAnonymous: Boolean = BasicConfig.DEFAULT_ALLOW_ANONYMOUS
     override val allowAnonymousDownload: Boolean = BasicConfig.DEFAULT_ALLOW_ANONYMOUS_DOWNLOAD
     override val users: Map<String, String> = BasicConfig.DEFAULT_USERS
+    override val callLogging: Boolean = BasicConfig.DEFAULT_CALL_LOGGING
+    override val ignoreUploadDownloadIOException: Boolean = BasicConfig.DEFAULT_IGNORE_UPLOAD_DOWNLOAD_IO_EXCEPTION
     private val config: File? by option(help = "Config json (Overwrite all params)").file(mustExist = true, canBeDir = false, mustBeReadable = true)
 
     init {

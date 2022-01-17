@@ -24,10 +24,10 @@ fun Application.configureRouting(config: IConfig) {
         withAuth(!config.allowAnonymous) {
             routeListFile(fileManager)
             routeViewFile(config, fileManager)
-            routeUploadFile(fileManager)
+            routeUploadFile(config, fileManager)
         }
         withAuth(!config.allowAnonymous && (config.allowAnonymous || !config.allowAnonymousDownload)) {
-            routeDownloadFile(fileManager)
+            routeDownloadFile(config, fileManager)
         }
     }
 }

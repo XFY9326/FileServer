@@ -7,4 +7,6 @@ interface IConfig {
     val allowAnonymous: Boolean
     val allowAnonymousDownload: Boolean
     val users: Map<String, String>
+    val callLogging: Boolean
+    val ignoreUploadDownloadIOException: Boolean
 }

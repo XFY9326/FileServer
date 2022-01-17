@@ -7,13 +7,15 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.pipeline.*
+import tool.xfy9326.fileserver.beans.IConfig
 import tool.xfy9326.fileserver.utils.FileManager
 import java.io.File
+import java.io.IOException
 
-fun Route.routeUploadFile(fileManager: FileManager) {
+fun Route.routeUploadFile(config: IConfig, fileManager: FileManager) {
     put("/$PATH_FILE/{$PARAMS_PATH_FILE...}") {
+        val path = call.getParamsPath()
         try {
-            val path = call.getParamsPath()
             fileManager.saveFile(path, call.receiveChannel())
             call.respond("$path: Upload file success!")
         } catch (e: AccessDeniedException) {
@@ -24,20 +26,23 @@ fun Route.routeUploadFile(fileManager: FileManager) {
             call.respondException(HttpStatusCode.InternalServerError, e)
         } catch (e: IllegalStateException) {
             call.respondException(HttpStatusCode.NotAcceptable, e)
+        } catch (e: IOException) {
+            if (!config.ignoreUploadDownloadIOException) e.printStackTrace()
+            call.respond("$path: Upload file failed!")
         } catch (e: Exception) {
             e.printStackTrace()
-            call.respond(HttpStatusCode.InternalServerError)
+            call.respondException(HttpStatusCode.InternalServerError, e)
         }
     }
     post("/$PATH_FILE/{$PARAMS_PATH_FILE...}") {
-        uploadMultipleFiles(fileManager)
+        uploadMultipleFiles(config, fileManager)
     }
     post("/$PATH_FILE/{$PARAMS_PATH_FILE...}/") {
-        uploadMultipleFiles(fileManager)
+        uploadMultipleFiles(config, fileManager)
     }
 }
 
-private suspend fun PipelineContext<Unit, ApplicationCall>.uploadMultipleFiles(fileManager: FileManager) {
+private suspend fun PipelineContext<Unit, ApplicationCall>.uploadMultipleFiles(config: IConfig, fileManager: FileManager) {
     try {
         val path = call.getParamsPath()
         if (fileManager.hasFile(path)) {
@@ -51,8 +56,8 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.uploadMultipleFiles(f
                     if (fileName == null) {
                         output.append("Upload file[$index] doesn't has a name!").append("\r\n")
                     } else {
+                        val filePath = if (path.isEmpty()) fileName else "$path${File.separator}$fileName"
                         try {
-                            val filePath = if (path.isEmpty()) fileName else "$path${File.separator}$fileName"
                             it.streamProvider().use { input ->
                                 fileManager.saveFile(filePath, input)
                             }
@@ -63,6 +68,9 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.uploadMultipleFiles(f
                             output.append(e.message.toString()).append("\r\n")
                         } catch (e: FileSystemException) {
                             output.append(e.message.toString()).append("\r\n")
+                        } catch (e: IOException) {
+                            if (!config.ignoreUploadDownloadIOException) e.printStackTrace()
+                            output.append("$filePath: Upload file failed!").append("\r\n")
                         }
                     }
                 }
@@ -72,6 +80,6 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.uploadMultipleFiles(f
         }
     } catch (e: Exception) {
         e.printStackTrace()
-        call.respond(HttpStatusCode.InternalServerError)
+        call.respondException(HttpStatusCode.InternalServerError, e)
     }
 }
