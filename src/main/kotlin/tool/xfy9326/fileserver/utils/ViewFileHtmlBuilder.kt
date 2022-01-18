@@ -10,9 +10,13 @@ fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: S
             +"Path: $currentPath"
         }
         link {
-            href = "/favicon.ico"
             rel = "icon"
             type = "image/x-icon"
+            href = "/favicon.ico"
+        }
+        meta {
+            name = "viewport"
+            content = "width=device-width, initial-scale=1.0"
         }
         script {
             if (userName != null) {
