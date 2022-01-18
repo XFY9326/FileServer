@@ -72,12 +72,12 @@ class FileManager constructor(config: IConfig) {
 
     fun hasFile(path: String) = File(fileRoot, path).isFile
 
-    suspend fun readFile(path: String, output: ByteWriteChannel) = coroutineScope {
+    fun getFile(path: String): File {
         val targetFile = getTargetFile(path)
         if (!targetFile.isFile || !targetFile.canRead()) {
             throw FileSystemException(File(path), reason = "File is s directory or not readable!")
         }
-        targetFile.readChannel(coroutineContext = coroutineContext).copyAndClose(output)
+        return targetFile
     }
 
     suspend fun saveFile(path: String, input: InputStream) = saveFile(path) {

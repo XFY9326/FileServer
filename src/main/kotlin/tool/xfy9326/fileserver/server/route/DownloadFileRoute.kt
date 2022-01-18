@@ -18,9 +18,12 @@ fun Route.routeDownloadFile(config: IConfig, fileManager: FileManager) {
             } else {
                 val path = paramsPath.joinToPath()
                 if (fileManager.hasFile(path)) {
-                    call.respondBytesWriter {
-                        fileManager.readFile(path, this)
-                    }
+                    val file = fileManager.getFile(path)
+                    call.response.header(
+                        HttpHeaders.ContentDisposition,
+                        ContentDisposition.Attachment.withParameter(ContentDisposition.Parameters.FileName, file.name).toString()
+                    )
+                    call.respondFile(file)
                 } else {
                     call.respondRedirect("/$PATH_FILE/$path/".encodeURLPath(), true)
                 }
