@@ -2,13 +2,17 @@ package tool.xfy9326.fileserver.utils
 
 import io.ktor.http.*
 import kotlinx.html.*
-import tool.xfy9326.fileserver.beans.IConfig
 
 @Suppress("JSUnusedLocalSymbols")
 fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: String? = null, allowAnonymousUpload: Boolean) {
     head {
         title {
             +"Path: $currentPath"
+        }
+        link {
+            href = "/favicon.ico"
+            rel = "icon"
+            type = "image/x-icon"
         }
         script {
             if (userName != null) {

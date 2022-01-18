@@ -4,6 +4,7 @@ import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.utils.io.jvm.javaio.*
 import tool.xfy9326.fileserver.beans.IConfig
 import tool.xfy9326.fileserver.utils.FileManager
 
@@ -20,6 +21,13 @@ fun Application.configureRouting(config: IConfig) {
         }
         get("/logout") {
             call.respond(HttpStatusCode.Unauthorized)
+        }
+        get("/favicon.ico") {
+            javaClass.classLoader.getResourceAsStream("favicon.ico")?.use {
+                call.respondBytesWriter(ContentType.Image.XIcon, HttpStatusCode.OK) {
+                    it.copyTo(this)
+                }
+            } ?: call.respond(HttpStatusCode.NotFound)
         }
         withAuth(!config.allowAnonymous) {
             routeListFile(fileManager)
