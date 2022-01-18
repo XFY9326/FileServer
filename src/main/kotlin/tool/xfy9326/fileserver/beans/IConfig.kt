@@ -9,4 +9,5 @@ interface IConfig {
     val users: Map<String, String>
     val callLogging: Boolean
     val ignoreUploadDownloadIOException: Boolean
+    val noCache: Boolean
 }

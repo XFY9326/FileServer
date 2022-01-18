@@ -31,6 +31,7 @@ private class Launch : CliktCommand(help = "Launch file server"), IConfig {
     override val users: Map<String, String> = BasicConfig.DEFAULT_USERS
     override val callLogging: Boolean = BasicConfig.DEFAULT_CALL_LOGGING
     override val ignoreUploadDownloadIOException: Boolean = BasicConfig.DEFAULT_IGNORE_UPLOAD_DOWNLOAD_IO_EXCEPTION
+    override val noCache: Boolean = BasicConfig.DEFAULT_NO_CACHE
     private val config: File? by option(help = "Config json (Overwrite all params)").file(mustExist = true, canBeDir = false, mustBeReadable = true)
 
     init {
