@@ -115,7 +115,10 @@ Default config:
     "allowAnonymous": true,
     "allowAnonymousDownload": true,
     "users": {
-    }
+    },
+    "callLogging": true,
+    "ignoreUploadDownloadIOException": true,
+    "noCache": true
 }
 ```
 | Field | Description |
@@ -126,5 +129,8 @@ Default config:
 | allowAnonymous | Close basic http auth |
 | allowAnonymousDownload | Download without basic http auth<br/>No effect if allowAnonymous=true<br/>http://HOST/f/PATH/FILE |
 | users | UserName:String to Password:String dict<br/>Useless if allowAnonymous=true |
+| callLogging | Output request details in the log |
+| ignoreUploadDownloadIOException | Ignore IOException thrown by upload and download |
+| noCache | Declare not using cache in the Cache control of the http header |
 
 **Attention: Blank or empty UserNames and Passwords are not allowed to use!**
