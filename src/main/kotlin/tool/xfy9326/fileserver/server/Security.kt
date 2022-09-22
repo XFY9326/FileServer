@@ -1,7 +1,7 @@
 package tool.xfy9326.fileserver.server
 
-import io.ktor.application.*
-import io.ktor.auth.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import tool.xfy9326.fileserver.beans.IConfig
 
 const val DEFAULT_BASIC_AUTH = "auth-basic"

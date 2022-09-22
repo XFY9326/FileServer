@@ -1,10 +1,10 @@
 package tool.xfy9326.fileserver.server.route
 
-import io.ktor.application.*
 import io.ktor.http.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.util.*
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
+import io.ktor.server.util.*
 import io.ktor.util.pipeline.*
 import tool.xfy9326.fileserver.utils.FileManager
 
