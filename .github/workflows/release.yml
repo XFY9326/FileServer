@@ -37,6 +37,8 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ steps.git_tag.outputs.tag }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
 
       - name: Gradle
         run: |
