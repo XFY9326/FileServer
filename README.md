@@ -43,7 +43,7 @@ java -jar FileServer-<VERSION>.jar default-config -h
 curl http://localhost:8080
 ```
 
-## Upload file
+## Upload files
 ```shell
 # Upload file and create dir
 curl --upload-file <FILE> "http://localhost:8080/f/<PATH>/<FILE>"
@@ -55,7 +55,7 @@ curl -F "<UPLOAD_FILE_NAME>=@<LOCAL_FILE_PATH>" -F "<UPLOAD_FILE_NAME>=@<LOCAL_F
 curl -u <USER>:<PASSWORD> --upload-file <FILE> "http://localhost:8080/f/<PATH>/<FILE>"
 ```
 
-## Download file
+## Download files
 ```shell
 # Download file
 wget "http://localhost:8080/f/<PATH>/<FILE>"
@@ -69,7 +69,7 @@ wget --user <USER> --password <PASSWORD> "http://localhost:8080/f/<PATH>/<FILE>"
 curl -u <USER>:<PASSWORD> -O "http://localhost:8080/f/<PATH>/<FILE>"
 ```
 
-## List file
+## List files
 ```shell
 # Show file names under the <PATH> in text
 curl "http://localhost:8080/l/<PATH>"
@@ -121,16 +121,16 @@ Default config:
     "noCache": true
 }
 ```
-| Field | Description |
-| ----- | ----- |
-| host | Server host |
-| port | Server port |
-| root | File server root path |
-| allowAnonymous | Close basic http auth |
-| allowAnonymousDownload | Download without basic http auth<br/>No effect if allowAnonymous=true<br/>http://HOST/f/PATH/FILE |
-| users | UserName:String to Password:String dict<br/>Useless if allowAnonymous=true |
-| callLogging | Output request details in the log |
-| ignoreUploadDownloadIOException | Ignore IOException thrown by upload and download |
-| noCache | Declare not using cache in the Cache control of the http header |
+| Field | Description                                                                                                   |
+| ----- |---------------------------------------------------------------------------------------------------------------|
+| host | Server host                                                                                                   |
+| port | Server port                                                                                                   |
+| root | File server root path                                                                                         |
+| allowAnonymous | Close basic http auth                                                                                         |
+| allowAnonymousDownload | Download without basic http auth<br/>No effect if allowAnonymous=true<br/>http://\<HOST\>/f/\<PATH\>/\<FILE\> |
+| users | UserName:String to Password:String dict<br/>Useless if allowAnonymous=true                                    |
+| callLogging | Output request details in the log                                                                             |
+| ignoreUploadDownloadIOException | Ignore IOException thrown by upload and download                                                              |
+| noCache | Declare not using cache in the Cache control of the http header                                               |
 
 **Attention: Blank or empty UserNames and Passwords are not allowed to use!**

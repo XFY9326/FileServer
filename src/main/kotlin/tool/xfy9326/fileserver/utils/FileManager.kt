@@ -9,6 +9,7 @@ import tool.xfy9326.fileserver.beans.IConfig
 import java.io.File
 import java.io.InputStream
 import kotlin.io.path.Path
+import kotlin.io.path.exists
 import kotlin.io.path.isHidden
 
 class FileManager constructor(config: IConfig) {
@@ -37,7 +38,7 @@ class FileManager constructor(config: IConfig) {
         val targetPath = Path(fileRootPath.toString(), path).normalize()
         if (targetPath.startsWith(fileRootPath)) {
             for (i in fileRootPath.nameCount until targetPath.nameCount) {
-                if (targetPath.getName(i).isHidden()) {
+                if (targetPath.getName(i).exists() && targetPath.getName(i).isHidden()) {
                     if (i == targetPath.nameCount - 1) {
                         throw AccessDeniedException(File(path), reason = "Not allow accessing hidden file!")
                     } else {
@@ -98,7 +99,7 @@ class FileManager constructor(config: IConfig) {
             if (targetFile.isFile) {
                 throw FileAlreadyExistsException(File(path), reason = "File already exists!")
             } else {
-                throw FileAlreadyExistsException(File(path), reason = "Same name directory already exists!")
+                throw FileAlreadyExistsException(File(path), reason = "Directory already exists!")
             }
         }
         targetFile.parentFile.let {
