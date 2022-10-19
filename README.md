@@ -34,14 +34,19 @@ java -jar FileServer-<VERSION>.jar launch -h
 
 java -jar FileServer-<VERSION>.jar default-config -h
 ```
-**Attention1: Not allow accessing hidden file or directory.**  
-**Attention2: Not allow accessing file out of root path.**
+
+There are some simple scripts under /scripts that can also be used to start FileServer.jar.
 
 ## Check server
 ```shell
 # Should return 'Server OK!'
 curl http://localhost:8080
 ```
+
+## Access attentions
+
+- Not allow accessing hidden file or directory. 
+- Not allow accessing file out of root path.
 
 ## Upload files
 ```shell
