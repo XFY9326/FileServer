@@ -10,8 +10,8 @@ val jansi_version: String by project
 
 plugins {
     application
-    kotlin("jvm") version "1.7.10"
-    kotlin("plugin.serialization") version "1.7.10"
+    kotlin("jvm") version "1.7.20"
+    kotlin("plugin.serialization") version "1.7.20"
 }
 
 group = "tool.xfy9326"

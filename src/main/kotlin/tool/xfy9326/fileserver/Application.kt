@@ -47,6 +47,7 @@ private class Launch : CliktCommand(help = "Launch file server"), IConfig {
             if (it == null) {
                 launchServer(this)
             } else {
+                println("Loading config from: ${it.absolutePath}")
                 launchServer(ConfigManager.loadConfigFromJsonFile(it))
             }
         }
