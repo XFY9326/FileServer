@@ -40,15 +40,17 @@ private class Launch : CliktCommand(help = "Launch file server"), IConfig {
         }
     }
 
+    @Suppress("HttpUrlsUsage")
     override fun run() {
         config.let {
-            @Suppress("HttpUrlsUsage")
-            println("Application is running at: http://$host:$port")
             if (it == null) {
+                println("Application is running at: http://$host:$port")
                 launchServer(this)
             } else {
                 println("Loading config from: ${it.absolutePath}")
-                launchServer(ConfigManager.loadConfigFromJsonFile(it))
+                val launchConfig = ConfigManager.loadConfigFromJsonFile(it)
+                println("Application is running at: http://${launchConfig.host}:${launchConfig.port}")
+                launchServer(launchConfig)
             }
         }
     }
