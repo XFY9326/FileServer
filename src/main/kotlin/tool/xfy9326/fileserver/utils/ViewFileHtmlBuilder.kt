@@ -41,27 +41,55 @@ fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: S
                             document.getElementById("files").click();
                         }
                         
+                        function humanFileSize(bytes, si=false, dp=1) {
+                            const thresh = si ? 1000 : 1024;
+                            if (Math.abs(bytes) < thresh) {
+                                return bytes + ' B';
+                            }
+                            const units = si ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+                            let u = -1;
+                            const r = 10**dp;
+                            
+                            do {
+                                bytes /= thresh;
+                                ++u;
+                            } while (Math.round(Math.abs(bytes) * r) / r >= thresh && u < units.length - 1);
+                            return bytes.toFixed(dp) + ' ' + units[u];
+                        }
+                        
                         function upload(files) {
+                            let uploadBtn = document.getElementById("upload");
                             let formData = new FormData();
                             for(let i = 0; i < files.length; i++){
                                 formData.append(files[i].name, files[i]);
                             }
-                            return fetch(window.location.href, {
-                                method: "POST",
-                                body: formData
-                            }).then(response => response.text()).catch(error => {
-                                console.error(error);
-                                return "Upload error!";
-                            });
+                            let xhr = new XMLHttpRequest();
+                            xhr.onloadstart = function () {
+                                uploadBtn.disabled = true;
+                                uploadBtn.innerText = "Uploading";
+                            }
+                            xhr.onloadend = function() {
+                                if (xhr.status === 200) {
+                                    window.location.reload();
+                                } else {
+                                    alert(xhr.response);
+                                }
+                                uploadBtn.disabled = false;
+                                uploadBtn.innerText = "Upload";
+                            };
+                            xhr.upload.onprogress = function (event) {
+                                if(event.lengthComputable) {
+                                    let uploadPercent = Math.floor(event.loaded * 100 / event.total);
+                                    uploadBtn.innerText = "Uploaded: " + uploadPercent + "% （" + humanFileSize(event.loaded) + "/" + humanFileSize(event.total) + ")";
+                                }
+                            };
+                            xhr.open("POST", window.location.href);
+                            xhr.send(formData);
                         }
                         
                         document.addEventListener("DOMContentLoaded", function() {
                             document.getElementById("files").onchange = function(event) {
-                                let files = event.target.files;
-                                upload(files).then(msg => {
-                                    alert(msg);
-                                    window.location.reload();
-                                });
+                                upload(event.target.files)
                             }
                         });
                     """.trimIndent()
@@ -86,6 +114,7 @@ fun HTML.buildViewFileHtml(currentPath: String, files: List<String>, userName: S
             +"Files: ${Typography.nbsp}${Typography.nbsp}${Typography.nbsp}${Typography.nbsp}"
             if (allowAnonymousUpload || userName != null) {
                 button {
+                    id = "upload"
                     onClick = "selectFiles()"
                     +"Upload"
                 }

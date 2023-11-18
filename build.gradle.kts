@@ -10,12 +10,12 @@ val jansi_version: String by project
 
 plugins {
     application
-    kotlin("jvm") version "1.7.20"
-    kotlin("plugin.serialization") version "1.7.20"
+    kotlin("jvm") version "1.9.20"
+    kotlin("plugin.serialization") version "1.9.20"
 }
 
 group = "tool.xfy9326"
-version = "0.0.10"
+version = "0.0.11"
 
 val MainClass = "tool.xfy9326.fileserver.ApplicationKt"
 val Author = "XFY9326"
@@ -34,7 +34,7 @@ tasks.register<Jar>("assembleJar") {
         attributes["Specification-Vendor"] = Author
     }
 
-    destinationDirectory.set(File(project.buildDir, "distributions"))
+    destinationDirectory.set(File(project.layout.buildDirectory.get().asFile, "distributions"))
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     from(tasks.compileJava.get().destinationDirectory.get())
@@ -52,19 +52,19 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 tasks.compileKotlin {
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 
 tasks.compileTestKotlin {
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 

@@ -4,7 +4,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.NoOpCliktCommand
 import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.core.subcommands
-import com.github.ajalt.clikt.output.CliktHelpFormatter
+import com.github.ajalt.clikt.output.MordantHelpFormatter
 import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.defaultLazy
 import com.github.ajalt.clikt.parameters.options.option
@@ -36,7 +36,7 @@ private class Launch : CliktCommand(help = "Launch file server"), IConfig {
 
     init {
         context {
-            helpFormatter = CliktHelpFormatter(showDefaultValues = true)
+            helpFormatter = { MordantHelpFormatter(it, showDefaultValues = true) }
         }
     }
 

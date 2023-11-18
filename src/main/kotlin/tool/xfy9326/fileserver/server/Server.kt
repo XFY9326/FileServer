@@ -12,17 +12,21 @@ import tool.xfy9326.fileserver.server.route.configureRouting
 
 fun launchServer(config: IConfig) {
     embeddedServer(CIO, host = config.host, port = config.port) {
-        if (config.callLogging) {
-            install(CallLogging)
-        }
-        if (config.noCache) {
-            install(CachingHeaders) {
-                options { _, _ ->
-                    CachingOptions(CacheControl.NoCache(null))
-                }
+        setupConfig(config)
+    }.start(wait = true)
+}
+
+private fun Application.setupConfig(config: IConfig) {
+    if (config.callLogging) {
+        install(CallLogging)
+    }
+    if (config.noCache) {
+        install(CachingHeaders) {
+            options { _, _ ->
+                CachingOptions(CacheControl.NoCache(null))
             }
         }
-        configureSecurity(config)
-        configureRouting(config)
-    }.start(wait = true)
+    }
+    configureSecurity(config)
+    configureRouting(config)
 }

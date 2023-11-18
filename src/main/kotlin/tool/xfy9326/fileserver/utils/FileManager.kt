@@ -12,7 +12,7 @@ import kotlin.io.path.Path
 import kotlin.io.path.exists
 import kotlin.io.path.isHidden
 
-class FileManager constructor(config: IConfig) {
+class FileManager(config: IConfig) {
     private val fileRootPath = Path(config.root).normalize()
     private val fileRoot = fileRootPath.toFile()
 

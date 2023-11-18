@@ -1,6 +1,5 @@
 package tool.xfy9326.fileserver.utils
 
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import tool.xfy9326.fileserver.beans.BasicConfig
