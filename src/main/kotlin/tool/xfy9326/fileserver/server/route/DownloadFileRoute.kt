@@ -23,6 +23,7 @@ fun Route.routeDownloadFile(config: IConfig, fileManager: FileManager) {
                         HttpHeaders.ContentDisposition,
                         ContentDisposition.Attachment.withParameter(ContentDisposition.Parameters.FileName, file.name).toString()
                     )
+                    call.application.log.info("Response file: ${file.path} (${file.length()})")
                     call.respondFile(file)
                 } else {
                     call.respondRedirect("/$PATH_FILE/$path/".encodeURLPath(), true)

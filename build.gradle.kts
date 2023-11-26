@@ -1,50 +1,41 @@
-@file:Suppress("PropertyName")
-
-val kotlin_version: String by project
-val ktor_version: String by project
-val clikt_version: String by project
-val kotlinx_coroutines_version: String by project
-val kotlinx_serialization_version: String by project
-val logback_version: String by project
-val jansi_version: String by project
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    application
-    kotlin("jvm") version "1.9.20"
-    kotlin("plugin.serialization") version "1.9.20"
+    kotlin("jvm") version "1.9.21"
+    kotlin("plugin.serialization") version "1.9.21"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "tool.xfy9326"
-version = "0.0.11"
+version = "0.0.12"
 
-val MainClass = "tool.xfy9326.fileserver.ApplicationKt"
-val Author = "XFY9326"
-
-application {
-    mainClass.set(MainClass)
+tasks.withType<Jar> {
+    manifest {
+        attributes(
+            "Main-Class" to "tool.xfy9326.fileserver.ApplicationKt",
+            "Version" to version,
+        )
+    }
 }
 
-tasks.register<Jar>("assembleJar") {
-    dependsOn("jar")
+tasks.withType<ShadowJar> {
+    archiveClassifier.set("with-dependencies")
 
-    manifest {
-        attributes["Main-Class"] = MainClass
-        attributes["Specification-Title"] = project.name
-        attributes["Specification-Version"] = project.version
-        attributes["Specification-Vendor"] = Author
-    }
-
-    destinationDirectory.set(File(project.layout.buildDirectory.get().asFile, "distributions"))
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    from(tasks.compileJava.get().destinationDirectory.get())
-    from(tasks.compileKotlin.get().destinationDirectory.get())
-    from(tasks.processResources.get().destinationDir)
-    from(
-        configurations.compileClasspath.get().map {
-            if (it.isDirectory) it else zipTree(it)
-        }
+    exclude(
+        "LICENSE",
+        "DebugProbesKt.bin",
+        "META-INF/com.android.tools/**",
+        "META-INF/maven/**",
+        "META-INF/proguard/**",
+        "META-INF/*.version",
+        "META-INF/LICENSE",
+        "META-INF/LICENSE.txt",
+        "META-INF/LGPL2.1",
+        "META-INF/AL2.0",
     )
+
+    mergeServiceFiles()
 }
 
 repositories {
@@ -52,38 +43,33 @@ repositories {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
-tasks.compileKotlin {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-}
-
-tasks.compileTestKotlin {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1")
 
-    implementation("io.ktor:ktor-server-core:$ktor_version")
-    implementation("io.ktor:ktor-server-auth:$ktor_version")
-    implementation("io.ktor:ktor-server-cio:$ktor_version")
-    implementation("io.ktor:ktor-server-html-builder:$ktor_version")
-    implementation("io.ktor:ktor-server-call-logging:$ktor_version")
-    implementation("io.ktor:ktor-server-caching-headers:$ktor_version")
+    val ktorVersion = "2.3.6"
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-auth:$ktorVersion")
+    implementation("io.ktor:ktor-server-cio:$ktorVersion")
+    implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-logging:$ktorVersion")
+    implementation("io.ktor:ktor-server-caching-headers:$ktorVersion")
 
-    implementation("ch.qos.logback:logback-classic:$logback_version")
-    implementation("org.fusesource.jansi:jansi:$jansi_version")
+    implementation("ch.qos.logback:logback-classic:1.4.11")
+    implementation("org.fusesource.jansi:jansi:2.4.1")
 
-    implementation("com.github.ajalt.clikt:clikt:$clikt_version")
+    implementation("com.github.ajalt.clikt:clikt:4.2.1")
 
-    testImplementation("io.ktor:ktor-server-tests:$ktor_version")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlin_version")
+    testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
+    testImplementation(kotlin("test"))
 }

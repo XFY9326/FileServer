@@ -2,11 +2,9 @@
     "host": "0.0.0.0",
     "port": 8080,
     "root": "files",
-    "allowAnonymous": false,
-    "allowAnonymousDownload": false,
-    "users": {
-        "user": "123456"
-    },
+    "allowAnonymous": true,
+    "allowAnonymousDownload": true,
+    "users": {},
     "callLogging": true,
     "ignoreUploadDownloadIOException": false,
     "noCache": true

@@ -43,7 +43,7 @@ jobs:
       - name: Gradle
         run: |
           ./gradlew assemble
-          ./gradlew assembleJar
+          ./gradlew shadowJar
 
       - name: Upload release
         uses: softprops/action-gh-release@v1
