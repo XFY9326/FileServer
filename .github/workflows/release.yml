@@ -52,7 +52,7 @@ jobs:
         with:
           tag_name: ${{ steps.git_tag.outputs.tag }}
           body: ${{ steps.git_tag.outputs.tag }}
-          files: build/distributions/*
+          files: build/libs/*.jar
 
       - name: Delete workflow runs
         uses: GitRML/delete-workflow-runs@main
