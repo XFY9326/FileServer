@@ -17,16 +17,17 @@ fun Route.routeDownloadFile(config: IConfig, fileManager: FileManager) {
                 call.respondRedirect("/$PATH_FILE/".encodeURLPath(), true)
             } else {
                 val path = paramsPath.joinToPath()
+                val viewPath = paramsPath.joinToPath("/")
                 if (fileManager.hasFile(path)) {
                     val file = fileManager.getFile(path)
                     call.response.header(
                         HttpHeaders.ContentDisposition,
                         ContentDisposition.Attachment.withParameter(ContentDisposition.Parameters.FileName, file.name).toString()
                     )
-                    call.application.log.info("Response file: ${file.path} (${file.length()})")
+                    call.application.log.info("Response file: '$viewPath' (${file.length()} Bytes)")
                     call.respondFile(file)
                 } else {
-                    call.respondRedirect("/$PATH_FILE/$path/".encodeURLPath(), true)
+                    call.respondRedirect("/$PATH_FILE/$viewPath/".encodeURLPath(), true)
                 }
             }
         } catch (e: AccessDeniedException) {

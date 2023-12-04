@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import tool.xfy9326.fileserver.server.DEFAULT_BASIC_AUTH
 import tool.xfy9326.fileserver.utils.FileManager.Companion.joinToPath
+import java.io.File
 
 fun Routing.withAuth(enableAuth: Boolean, block: Route.() -> Unit) {
     if (enableAuth) {
@@ -16,7 +17,8 @@ fun Routing.withAuth(enableAuth: Boolean, block: Route.() -> Unit) {
     }
 }
 
-fun ApplicationCall.getParamsPath() = parameters.getAll(PARAMS_PATH_FILE)?.filter { it.isNotBlank() }.joinToPath()
+fun ApplicationCall.getParamsPath(separator: String = File.separator) =
+    parameters.getAll(PARAMS_PATH_FILE)?.filter { it.isNotBlank() }.joinToPath(separator)
 
 suspend fun ApplicationCall.respondException(statusCode: HttpStatusCode, exception: Exception) {
     respond(statusCode, exception.message.toString() + "\r\n")

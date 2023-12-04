@@ -14,9 +14,10 @@ fun Route.routeViewFile(config: IConfig, fileManager: FileManager) {
     get("/$PATH_FILE/{$PARAMS_PATH_FILE...}/") {
         try {
             val path = call.getParamsPath()
-            val files = fileManager.listFiles(path)
+            val viewPath = call.getParamsPath("/")
+            val viewFiles = fileManager.listFiles(path, separator = "/")
             call.respondHtml {
-                buildViewFileHtml("/$path", files, call.principal<UserIdPrincipal>()?.name, config.allowAnonymous)
+                buildViewFileHtml("/$viewPath", viewFiles, call.principal<UserIdPrincipal>()?.name, config.allowAnonymous)
             }
         } catch (e: AccessDeniedException) {
             call.respondException(HttpStatusCode.Forbidden, e)

@@ -26,7 +26,7 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.listFiles(fileManager
     try {
         val showUrl = call.parameters[PARAM_URL] ?: call.parameters[PARAM_U]
         val fileOnly = (call.parameters[PARAM_FILE] ?: call.parameters[PARAM_F]) != null
-        val files = fileManager.listFiles(call.getParamsPath(), fileOnly)
+        val files = fileManager.listFiles(call.getParamsPath(), fileOnly, "/")
         val output = buildString {
             files.forEach {
                 if (showUrl != null) {

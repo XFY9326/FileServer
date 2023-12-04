@@ -5,8 +5,10 @@ import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.cio.*
 import io.ktor.server.engine.*
+import io.ktor.server.plugins.autohead.*
 import io.ktor.server.plugins.cachingheaders.*
 import io.ktor.server.plugins.callloging.*
+import io.ktor.server.plugins.partialcontent.*
 import tool.xfy9326.fileserver.beans.IConfig
 import tool.xfy9326.fileserver.server.route.configureRouting
 
@@ -27,6 +29,8 @@ private fun Application.setupConfig(config: IConfig) {
             }
         }
     }
+    install(AutoHeadResponse)
+    install(PartialContent)
     configureSecurity(config)
     configureRouting(config)
 }

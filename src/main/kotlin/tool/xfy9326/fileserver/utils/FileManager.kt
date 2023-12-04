@@ -9,11 +9,12 @@ import tool.xfy9326.fileserver.beans.IConfig
 import java.io.File
 import java.io.InputStream
 import kotlin.io.path.Path
+import kotlin.io.path.absolute
 import kotlin.io.path.exists
 import kotlin.io.path.isHidden
 
 class FileManager(config: IConfig) {
-    private val fileRootPath = Path(config.root).normalize()
+    private val fileRootPath = Path(config.root).normalize().absolute()
     private val fileRoot = fileRootPath.toFile()
 
     init {
@@ -25,17 +26,17 @@ class FileManager(config: IConfig) {
     }
 
     companion object {
-        fun List<String>?.joinToPath(): String {
+        fun List<String>?.joinToPath(separator: String = File.separator): String {
             return if (isNullOrEmpty()) {
                 ""
             } else {
-                joinToString(File.separator)
+                joinToString(separator)
             }
         }
     }
 
     private fun getTargetFile(path: String): File {
-        val targetPath = Path(fileRootPath.toString(), path).normalize()
+        val targetPath = Path(fileRootPath.toString(), path).normalize().absolute()
         if (targetPath.startsWith(fileRootPath)) {
             for (i in fileRootPath.nameCount until targetPath.nameCount) {
                 if (targetPath.getName(i).exists() && targetPath.getName(i).isHidden()) {
@@ -52,14 +53,14 @@ class FileManager(config: IConfig) {
         }
     }
 
-    fun listFiles(path: String, fileOnly: Boolean = false): List<String> {
+    fun listFiles(path: String, fileOnly: Boolean = false, separator: String = File.separator): List<String> {
         val targetFile = getTargetFile(path)
         if (targetFile.isDirectory) {
             return targetFile.listFiles { file ->
                 !file.isHidden && (!fileOnly || file.isFile)
             }?.map {
                 if (it.isDirectory) {
-                    it.name + File.separator
+                    it.name + separator
                 } else {
                     it.name
                 }
@@ -71,7 +72,7 @@ class FileManager(config: IConfig) {
         }
     }
 
-    fun hasFile(path: String) = File(fileRoot, path).isFile
+    fun hasFile(path: String) = getTargetFile(path).isFile
 
     fun getFile(path: String): File {
         val targetFile = getTargetFile(path)
