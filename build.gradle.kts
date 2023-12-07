@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "tool.xfy9326"
-version = "0.0.12"
+version = "0.0.13"
 
 tasks.withType<Jar> {
     manifest {
