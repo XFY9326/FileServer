@@ -15,6 +15,7 @@ import tool.xfy9326.fileserver.server.route.configureRouting
 fun launchServer(config: IConfig) {
     embeddedServer(CIO, host = config.host, port = config.port) {
         setupConfig(config)
+        printNetAddressWhenReady()
     }.start(wait = true)
 }
 
@@ -33,4 +34,17 @@ private fun Application.setupConfig(config: IConfig) {
     install(PartialContent)
     configureSecurity(config)
     configureRouting(config)
+}
+
+@Suppress("HttpUrlsUsage")
+private fun Application.printNetAddressWhenReady() {
+    environment.monitor.subscribe(ServerReady) {
+        if (it is ApplicationEngineEnvironment) {
+            it.connectors.forEach { connector ->
+                it.log.info("Application is serving at: http://${connector.host}:${connector.port}")
+            }
+        } else {
+            it.log.info("Application is serving at: http://${it.config.host}:${it.config.port}")
+        }
+    }
 }

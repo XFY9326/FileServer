@@ -2,13 +2,13 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("jvm") version "1.9.21"
-    kotlin("plugin.serialization") version "1.9.21"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 group = "tool.xfy9326"
-version = "0.0.12"
+version = "0.0.14"
 
 tasks.withType<Jar> {
     manifest {
@@ -54,10 +54,10 @@ kotlin {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
-    val ktorVersion = "2.3.6"
+    val ktorVersion = "2.3.8"
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-auth:$ktorVersion")
     implementation("io.ktor:ktor-server-cio:$ktorVersion")
@@ -70,7 +70,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.4.11")
     implementation("org.fusesource.jansi:jansi:2.4.1")
 
-    implementation("com.github.ajalt.clikt:clikt:4.2.1")
+    implementation("com.github.ajalt.clikt:clikt:4.2.2")
 
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
     testImplementation(kotlin("test"))

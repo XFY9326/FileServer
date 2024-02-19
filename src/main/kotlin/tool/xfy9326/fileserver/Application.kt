@@ -15,6 +15,7 @@ import tool.xfy9326.fileserver.beans.IConfig
 import tool.xfy9326.fileserver.server.launchServer
 import tool.xfy9326.fileserver.utils.ConfigManager
 import java.io.File
+import java.net.NetworkInterface
 
 fun main(args: Array<String>) {
     JarCommand().subcommands(Launch(), DefaultConfig()).main(args)
@@ -40,18 +41,31 @@ private class Launch : CliktCommand(help = "Launch file server"), IConfig {
         }
     }
 
-    @Suppress("HttpUrlsUsage")
     override fun run() {
         config.let {
             if (it == null) {
-                println("Application is running at: http://$host:$port")
+                printAllPublicAddresses()
                 launchServer(this)
             } else {
                 println("Loading config from: ${it.absolutePath}")
+                printAllPublicAddresses()
                 val launchConfig = ConfigManager.loadConfigFromJsonFile(it)
-                println("Application is running at: http://${launchConfig.host}:${launchConfig.port}")
                 launchServer(launchConfig)
             }
+        }
+    }
+
+    private fun printAllPublicAddresses() {
+        NetworkInterface.getNetworkInterfaces().asSequence().filterNotNull().flatMap {
+            it.inetAddresses.asSequence()
+        }.filter {
+            !it.isAnyLocalAddress && !it.isLinkLocalAddress && !it.isLoopbackAddress && !it.isSiteLocalAddress
+        }.map {
+            it.hostAddress.substringBeforeLast('%')
+        }.toSortedSet().takeIf {
+            it.isNotEmpty()
+        }?.joinToString()?.let {
+            println("Available public network hosts: $it")
         }
     }
 }
